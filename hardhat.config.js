@@ -20,17 +20,17 @@ module.exports = {
     deployer: {
       default: 0,
       opBNB_testnet: `privatekey://${process.env.DEPLOY_PRIVATE_KEY}`,
-      opBNB_mainnet: `privatekey://${process.env.DEPLOY_PRIVATE_KEY}`,
+      eth_testnet: `privatekey://${process.env.DEPLOY_PRIVATE_KEY}`,
     },
     manager: {
       default: 1,
       opBNB_testnet: process.env.MANAGER_ADDR,
-      opBNB_mainnet: process.env.MANAGER_ADDR,
+      eth_testnet: process.env.MANAGER_ADDR,
     },
     treasure: {
       default: 1,
       opBNB_testnet: process.env.TREASURE_ADDR,
-      opBNB_mainnet: process.env.TREASURE_ADDR,
+      eth_testnet: process.env.TREASURE_ADDR,
     },
   },
   networks: {
@@ -40,10 +40,10 @@ module.exports = {
       chainId: 5611,
       gasPrice: 3_000_000_000,
     },
-    opBNB_mainnet: {
-      url: "https://opbnb-mainnet-rpc.bnbchain.org",
+    eth_testnet: {
+      url: "https://rpc.ankr.com/eth_sepolia",
       accounts: [process.env.DEPLOY_PRIVATE_KEY],
-      chainId: 204,
+      chainId: 11155111,
     },
   },
   gasReporter: {
