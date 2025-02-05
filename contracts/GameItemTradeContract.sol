@@ -5,16 +5,24 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 
-contract DailyRewardContract is Context, AccessControlEnumerable {
+contract GameItemTradeContract is Context, AccessControlEnumerable {
     bytes32 public constant MANAGER_ROLE = keccak256("MANAGER_ROLE");
     mapping(uint256 => bool) public _nonces;
-    mapping(address => mapping(uint256 => bool)) _claimHist;
+    address payable public _treasureWallet;
 
-    constructor() {
+    constructor(address payable treasureWallet) {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _treasureWallet = treasureWallet;
     }
 
-    event Claimed(address user, uint256 dateId, uint256 point, uint256 nonce);
+    event Bought(
+        address user,
+        uint256 item,
+        uint256 amount,
+        uint256 point,
+        uint256 price,
+        uint256 nonce
+    );
     modifier onlyManager() {
         require(hasRole(MANAGER_ROLE, _msgSender()), "Invalid sender");
         _;
@@ -27,31 +35,30 @@ contract DailyRewardContract is Context, AccessControlEnumerable {
         require(block.timestamp < deadline, "invalid timestamp");
         _;
     }
-    modifier notDateClaimByAddr(uint256 dateId, address user) {
-        require(!_claimHist[_msgSender()][dateId], "already claim this date");
-        _;
+
+    function setTreasureWallet(
+        address payable treasureWallet
+    ) public onlyManager {
+        _treasureWallet = treasureWallet;
     }
 
-    function claim(
-        uint256 dateId,
+    function buy(
+        uint256 item,
+        uint256 amount,
         uint256 point,
         uint256 nonce,
         uint256 deadline,
         bytes calldata signature
-    )
-        public
-        payable
-        onlyValidNonce(nonce)
-        onlyValidTime(deadline)
-        notDateClaimByAddr(dateId, _msgSender())
-    {
+    ) public payable onlyValidNonce(nonce) onlyValidTime(deadline) {
         bytes32 message = keccak256(
             abi.encodePacked(
                 block.chainid,
                 address(this),
                 _msgSender(),
-                dateId,
+                item,
+                amount,
                 point,
+                msg.value,
                 nonce,
                 deadline
             )
@@ -61,9 +68,10 @@ contract DailyRewardContract is Context, AccessControlEnumerable {
             hasRole(MANAGER_ROLE, ECDSA.recover(msgHash, signature)),
             "invalid signature"
         );
+
         _nonces[nonce] = true;
-        _claimHist[_msgSender()][dateId] = true;
-        emit Claimed(_msgSender(), dateId, point, nonce);
+        _treasureWallet.transfer(msg.value);
+        emit Bought(_msgSender(), item, amount, point, msg.value, nonce);
     }
 
     receive() external payable {}
