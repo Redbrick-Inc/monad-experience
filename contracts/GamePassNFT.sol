@@ -11,6 +11,7 @@ contract GamePassNFT is ERC721Burnable, AccessControlEnumerable {
 
     constructor(string memory name, string memory symbol) ERC721(name, symbol) {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _setupRole(MANAGER_ROLE, _msgSender());
     }
 
     modifier onlyManager() {

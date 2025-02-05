@@ -11,6 +11,7 @@ contract GamePassMarketContract is Context, AccessControlEnumerable {
     bytes32 public constant MANAGER_ROLE = keccak256("MANAGER_ROLE");
     mapping(uint256 => bool) public _nonces;
     address payable public _treasureWallet;
+    // mapping(address => bool) public _minted;
 
     address public _nftAddr;
 
@@ -44,6 +45,7 @@ contract GamePassMarketContract is Context, AccessControlEnumerable {
         _;
     }
     modifier isMintable(address user) {
+        // require(!_minted[user], "already minted");
         IERC721 nft = IERC721(_nftAddr);
         require(nft.balanceOf(user) == 0, "already has game pass");
         _;
@@ -84,7 +86,7 @@ contract GamePassMarketContract is Context, AccessControlEnumerable {
             "invalid signature"
         );
         _nonces[nonce] = true;
-
+        // _minted[_msgSender()] = true;
         GamePassNFT nft = GamePassNFT(_nftAddr);
         nft.mint(_msgSender(), tokenId);
         _treasureWallet.transfer(msg.value);
