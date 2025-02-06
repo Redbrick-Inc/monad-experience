@@ -151,7 +151,7 @@ describe("DailyRewardContract", function () {
       await tx;
       await expect(tx)
         .to.emit(gamepassMarket, "Refilled")
-        .withArgs(to.address, tokenId, plays, price, nonce);
+        .withArgs(to.address, tokenId, price, nonce, plays);
     } else {
       if (revertMsg) {
         await expect(tx).to.revertedWith(revertMsg);

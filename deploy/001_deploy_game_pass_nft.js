@@ -8,11 +8,13 @@ module.exports = async ({ ethers, deployments, getNamedAccounts }) => {
     from: deployer,
     log: true,
     args: ["GPass", "GPass"],
+    nonce: "pending",
   });
   const gamepassMarketContract = await deploy(GAME_PASS_MARKET, {
     from: deployer,
     log: true,
     args: [deployed.address, treasure],
+    nonce: "pending",
   });
   if (deployed.newlyDeployed) {
     await execute(

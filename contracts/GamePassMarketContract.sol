@@ -25,9 +25,9 @@ contract GamePassMarketContract is Context, AccessControlEnumerable {
     event Refilled(
         address user,
         uint256 tokenId,
-        uint256 plays,
         uint256 price,
-        uint256 nonce
+        uint256 nonce,
+        uint256 plays
     );
     modifier onlyManager() {
         require(
@@ -125,7 +125,7 @@ contract GamePassMarketContract is Context, AccessControlEnumerable {
         );
 
         _treasureWallet.transfer(msg.value);
-        emit Refilled(_msgSender(), tokenId, plays, msg.value, nonce);
+        emit Refilled(_msgSender(), tokenId, msg.value, nonce, plays);
     }
 
     receive() external payable {}
