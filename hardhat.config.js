@@ -21,16 +21,19 @@ module.exports = {
       default: 0,
       opBNB_testnet: `privatekey://${process.env.DEPLOY_PRIVATE_KEY}`,
       eth_testnet: `privatekey://${process.env.DEPLOY_PRIVATE_KEY}`,
+      monad_testnet: `privatekey://${process.env.DEPLOY_PRIVATE_KEY}`,
     },
     manager: {
       default: 1,
       opBNB_testnet: process.env.MANAGER_ADDR,
       eth_testnet: process.env.MANAGER_ADDR,
+      monad_testnet: process.env.MANAGER_ADDR,
     },
     treasure: {
       default: 1,
       opBNB_testnet: process.env.TREASURE_ADDR,
       eth_testnet: process.env.TREASURE_ADDR,
+      monad_testnet: process.env.TREASURE_ADDR,
     },
   },
   networks: {
@@ -44,6 +47,11 @@ module.exports = {
       url: "https://rpc.ankr.com/eth_sepolia",
       accounts: [process.env.DEPLOY_PRIVATE_KEY],
       chainId: 11155111,
+    },
+    monad_testnet: {
+      url: "https://testnet-rpc2.monad.xyz/336fed29348da230015fa18b276499682193db52",
+      accounts: [process.env.DEPLOY_PRIVATE_KEY],
+      chainId: 10143,
     },
   },
   gasReporter: {
