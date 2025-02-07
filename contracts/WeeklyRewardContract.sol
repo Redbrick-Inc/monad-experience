@@ -107,7 +107,7 @@ contract WeeklyRewardContract is Context, AccessControlEnumerable {
     //     );
     // }
 
-    function mint2(
+    function claim(
         uint256 weekId,
         uint256[] calldata values,
         // uint256 bricRoleAmount,

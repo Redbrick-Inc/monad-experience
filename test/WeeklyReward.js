@@ -92,7 +92,7 @@ describe("DailyRewardContract", function () {
     );
     const tx = gamepassMarket
       .connect(to)
-      .mint2(
+      .claim(
         weekId,
         [bricRoleAmount, brickieTokenId, badge, point],
         nonce,
