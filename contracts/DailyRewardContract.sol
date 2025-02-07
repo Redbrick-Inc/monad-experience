@@ -8,10 +8,12 @@ import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 contract DailyRewardContract is Context, AccessControlEnumerable {
     bytes32 public constant MANAGER_ROLE = keccak256("MANAGER_ROLE");
     mapping(uint256 => bool) public _nonces;
+    address payable public _treasureWallet;
     mapping(address => mapping(uint256 => bool)) _claimHist;
 
-    constructor() {
+    constructor(address payable treasureWallet) {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
+        _treasureWallet = treasureWallet;
     }
 
     event Claimed(address user, uint256 dateId, uint256 point, uint256 nonce);
@@ -30,6 +32,12 @@ contract DailyRewardContract is Context, AccessControlEnumerable {
     modifier notDateClaimByAddr(uint256 dateId, address user) {
         require(!_claimHist[_msgSender()][dateId], "already claim this date");
         _;
+    }
+
+    function setTreasureWallet(
+        address payable treasureWallet
+    ) public onlyManager {
+        _treasureWallet = treasureWallet;
     }
 
     function claim(
@@ -52,6 +60,7 @@ contract DailyRewardContract is Context, AccessControlEnumerable {
                 _msgSender(),
                 dateId,
                 point,
+                msg.value,
                 nonce,
                 deadline
             )
@@ -63,6 +72,7 @@ contract DailyRewardContract is Context, AccessControlEnumerable {
         );
         _nonces[nonce] = true;
         _claimHist[_msgSender()][dateId] = true;
+        _treasureWallet.transfer(msg.value);
         emit Claimed(_msgSender(), dateId, point, nonce);
     }
 

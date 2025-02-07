@@ -6,7 +6,7 @@ module.exports = async ({ ethers, deployments, getNamedAccounts }) => {
   const deployed = await deploy(CONTRACT_NAME, {
     from: deployer,
     log: true,
-    args: [],
+    args: [treasure],
   });
 
   if (deployed.newlyDeployed) {

@@ -26,13 +26,22 @@ describe("DailyRewardContract", function () {
   beforeEach(async () => {
     ({ deployer, manager, playEarnContract, treasureWallet } = await setup());
   });
-  async function genSign(signer, senderAddr, dateId, point, nonce, deadline) {
+  async function genSign(
+    signer,
+    senderAddr,
+    dateId,
+    point,
+    price,
+    nonce,
+    deadline
+  ) {
     const msgHash = ethers.getBytes(
       ethers.solidityPackedKeccak256(
         [
           "uint256",
           "address",
           "address",
+          "uint256",
           "uint256",
           "uint256",
           "uint256",
@@ -44,6 +53,7 @@ describe("DailyRewardContract", function () {
           senderAddr,
           dateId,
           point,
+          price,
           nonce,
           deadline,
         ]
@@ -55,6 +65,7 @@ describe("DailyRewardContract", function () {
     to,
     dateId,
     point,
+    price,
     nonce,
     deadline,
     isReverted = false,
@@ -65,18 +76,25 @@ describe("DailyRewardContract", function () {
       to.address,
       dateId,
       point,
+      price,
       nonce,
       deadline
     );
     const tx = playEarnContract
       .connect(to)
-      .claim(dateId, point, nonce, deadline, signature);
+      .claim(dateId, point, nonce, deadline, signature, {
+        value: price,
+      });
 
     if (!isReverted) {
       await tx;
       await expect(tx)
         .to.emit(playEarnContract, "Claimed")
         .withArgs(to.address, dateId, point, nonce);
+      await expect(tx).changeEtherBalances(
+        [treasureWallet, to],
+        [price, -price]
+      );
     } else {
       if (revertMsg) {
         await expect(tx).to.revertedWith(revertMsg);
@@ -90,8 +108,9 @@ describe("DailyRewardContract", function () {
     const dateId = 1;
     const point = 10;
     const nonce = 1;
+    const price = 1;
     const deadline = (await time.latest()) + 10000;
-    await sendClaim(to, dateId, point, nonce, deadline);
+    await sendClaim(to, dateId, point, price, nonce, deadline);
   });
   it("Should revert when re-claiming in same date", async function () {
     const [to] = await ethers.getUnnamedSigners();
@@ -99,12 +118,14 @@ describe("DailyRewardContract", function () {
     const point = 10;
     const nonce = 1;
     const deadline = (await time.latest()) + 10000;
-    await sendClaim(to, dateId, point, nonce, deadline);
+    const price = 1;
+    await sendClaim(to, dateId, point, price, nonce, deadline);
     const newNonce = 2;
     const newDeadline = (await time.latest()) + 10000;
     await sendClaim(
       to,
       dateId,
+      price,
       point,
       newNonce,
       newDeadline,
