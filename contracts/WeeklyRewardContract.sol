@@ -54,59 +54,6 @@ contract WeeklyRewardContract is Context, AccessControlEnumerable {
         _treasureWallet = treasureWallet;
     }
 
-    // function mint(
-    //     uint256 weekId,
-    //     uint256 bricRoleAmount,
-    //     uint256 brickieTokenId,
-    //     uint256 badge,
-    //     uint256 point,
-    //     uint256 nonce,
-    //     uint256 deadline,
-    //     bytes calldata signature
-    // )
-    //     public
-    //     payable
-    //     onlyValidNonce(nonce)
-    //     onlyValidTime(deadline)
-    //     notDateClaimByAddr(weekId, _msgSender())
-    // {
-    //     bytes32 message = keccak256(
-    //         abi.encodePacked(
-    //             block.chainid,
-    //             address(this),
-    //             _msgSender(),
-    //             weekId,
-    //             bricRoleAmount,
-    //             brickieTokenId,
-    //             badge,
-    //             point,
-    //             msg.value,
-    //             nonce,
-    //             deadline
-    //         )
-    //     );
-    //     bytes32 msgHash = ECDSA.toEthSignedMessageHash(message);
-    //     require(
-    //         hasRole(MANAGER_ROLE, ECDSA.recover(msgHash, signature)),
-    //         "invalid signature"
-    //     );
-    //     _nonces[nonce] = true;
-    //     _claimHist[_msgSender()][weekId] = true;
-    //     BrickieNFT nft = BrickieNFT(_nftAddr);
-    //     nft.mint(_msgSender(), brickieTokenId);
-    //     _treasureWallet.transfer(msg.value);
-    //     emit Claimed(
-    //         _msgSender(),
-    //         weekId,
-    //         bricRoleAmount,
-    //         brickieTokenId,
-    //         badge,
-    //         point,
-    //         msg.value,
-    //         nonce
-    //     );
-    // }
-
     function claim(
         uint256 weekId,
         uint256[] calldata values,
@@ -147,8 +94,10 @@ contract WeeklyRewardContract is Context, AccessControlEnumerable {
         );
         _nonces[nonce] = true;
         _claimHist[_msgSender()][weekId] = true;
-        BrickieNFT nft = BrickieNFT(_nftAddr);
-        nft.mint(_msgSender(), values[1]);
+        if (values[1] > 0) {
+            BrickieNFT nft = BrickieNFT(_nftAddr);
+            nft.mint(_msgSender(), values[1]);
+        }
         _treasureWallet.transfer(msg.value);
         emit Claimed(_msgSender(), weekId, values, nonce);
     }
