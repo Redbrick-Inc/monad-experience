@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "./BrickieNFT.sol";
+import "./BrikieNFT.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 
@@ -95,7 +95,7 @@ contract WeeklyRewardContract is Context, AccessControlEnumerable {
         _nonces[nonce] = true;
         _claimHist[_msgSender()][weekId] = true;
         if (values[1] > 0) {
-            BrickieNFT nft = BrickieNFT(_nftAddr);
+            BrikieNFT nft = BrikieNFT(_nftAddr);
             nft.mint(_msgSender(), values[1]);
         }
         _treasureWallet.transfer(msg.value);

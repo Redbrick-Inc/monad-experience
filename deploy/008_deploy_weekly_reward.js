@@ -1,4 +1,4 @@
-const BRICKIE_NFT = "BrickieNFT";
+const BRICKIE_NFT = "BrikieNFT";
 const WEEKLY_REWARD = "WeeklyRewardContract";
 
 module.exports = async ({ ethers, deployments, getNamedAccounts }) => {
@@ -7,7 +7,7 @@ module.exports = async ({ ethers, deployments, getNamedAccounts }) => {
   const deployed = await deploy(BRICKIE_NFT, {
     from: deployer,
     log: true,
-    args: ["Brickie", "Brickie"],
+    args: ["Brikie", "Brikie"],
   });
   const gamepassMarketContract = await deploy(WEEKLY_REWARD, {
     from: deployer,
