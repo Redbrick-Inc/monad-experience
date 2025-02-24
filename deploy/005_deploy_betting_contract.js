@@ -1,4 +1,4 @@
-const CONTRACT_NAME = "BettingContractv2";
+const CONTRACT_NAME = "BettingContract";
 module.exports = async ({ ethers, deployments, getNamedAccounts }) => {
   const { deployer, manager, treasure } = await getNamedAccounts();
   const { deploy, execute, read } = deployments;

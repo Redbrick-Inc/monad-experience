@@ -5,12 +5,11 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 
-contract BettingContractv2 is Context, AccessControlEnumerable {
+contract BettingContract is Context, AccessControlEnumerable {
     struct BettingData {
         bool isJoined;
         uint256 voteType;
-        uint256 point;
-        uint256 badge;
+        uint256 stars;
     }
     bytes32 public constant MANAGER_ROLE = keccak256("MANAGER_ROLE");
     mapping(uint256 => bool) public _nonces;
@@ -28,8 +27,7 @@ contract BettingContractv2 is Context, AccessControlEnumerable {
         address user,
         uint256 gameId,
         uint256 voteType,
-        uint256 point,
-        uint256 badge,
+        uint256 stars,
         uint256 nonce
     );
 
@@ -63,8 +61,7 @@ contract BettingContractv2 is Context, AccessControlEnumerable {
     function bet(
         uint256 gameId,
         uint256 voteType,
-        uint256 point,
-        uint256 badge,
+        uint256 stars,
         uint256 nonce,
         uint256 deadline,
         bytes calldata signature
@@ -82,8 +79,7 @@ contract BettingContractv2 is Context, AccessControlEnumerable {
                 _msgSender(),
                 gameId,
                 voteType,
-                point,
-                badge,
+                stars,
                 nonce,
                 deadline
             )
@@ -96,18 +92,17 @@ contract BettingContractv2 is Context, AccessControlEnumerable {
         require(msg.value == _fee, "not enough fee");
         _nonces[nonce] = true;
         _treasureWallet.transfer(_fee);
-        _doBet(gameId, voteType, point, badge, nonce);
+        _doBet(gameId, voteType, stars, nonce);
     }
 
     function _doBet(
         uint256 gameId,
         uint256 voteType,
-        uint256 point,
-        uint256 badge,
+        uint256 stars,
         uint256 nonce
     ) private {
-        _bets[gameId][_msgSender()] = BettingData(true, voteType, point, badge);
-        emit BetEvent(_msgSender(), gameId, voteType, point, badge, nonce);
+        _bets[gameId][_msgSender()] = BettingData(true, voteType, stars);
+        emit BetEvent(_msgSender(), gameId, voteType, stars, nonce);
     }
 
     receive() external payable {}
