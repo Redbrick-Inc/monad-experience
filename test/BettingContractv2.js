@@ -21,7 +21,7 @@ describe("Betting Contract v2", function () {
   let deployer;
   let manager;
   let bettingContract;
-  let fee = ethers.parseEther("0.0000018");
+  // let fee = ethers.parseEther("0.0000018");
   let treasureWallet;
   beforeEach(async () => {
     ({ deployer, manager, bettingContract, treasureWallet } = await setup());
@@ -32,6 +32,7 @@ describe("Betting Contract v2", function () {
     gameId,
     voteType,
     stars,
+    fee,
     nonce,
     deadline
   ) {
@@ -46,6 +47,7 @@ describe("Betting Contract v2", function () {
           "uint256",
           "uint256",
           "uint256",
+          "uint256",
         ],
         [
           hre.network.config.chainId,
@@ -54,6 +56,7 @@ describe("Betting Contract v2", function () {
           gameId,
           voteType,
           stars,
+          fee,
           nonce,
           deadline,
         ]
@@ -66,6 +69,7 @@ describe("Betting Contract v2", function () {
     gameId,
     voteType,
     stars,
+    fee,
     nonce,
     deadline,
     isReverted = false,
@@ -77,6 +81,7 @@ describe("Betting Contract v2", function () {
       gameId,
       voteType,
       stars,
+      fee,
       nonce,
       deadline
     );
@@ -90,7 +95,7 @@ describe("Betting Contract v2", function () {
       await tx;
       await expect(tx)
         .to.emit(bettingContract, "BetEvent")
-        .withArgs(to.address, gameId, voteType, stars, nonce);
+        .withArgs(to.address, gameId, voteType, stars, fee, nonce);
       await expect(tx).changeEtherBalances([treasureWallet, to], [fee, -fee]);
       const betData = await bettingContract._bets(gameId, to.address);
       expect(betData.isJoined).to.be.equal(true);
@@ -109,9 +114,10 @@ describe("Betting Contract v2", function () {
     const voteType = 1;
     const stars = 10;
     const nonce = 1;
+    const fee = ethers.parseEther("0.0000018");
     const gameId = 1;
     const deadline = (await time.latest()) + 10000;
-    await sendBet(to, gameId, voteType, stars, nonce, deadline);
+    await sendBet(to, gameId, voteType, stars, fee, nonce, deadline);
   });
 
   it("Should be reverted when re-betting", async function () {
@@ -119,9 +125,10 @@ describe("Betting Contract v2", function () {
     const voteType = 1;
     const stars = 10;
     const gameId = 1;
+    const fee = ethers.parseEther("0.0000018");
     let nonce = 1;
     let deadline = (await time.latest()) + 10000;
-    await sendBet(to, gameId, voteType, stars, nonce, deadline);
+    await sendBet(to, gameId, voteType, stars, fee, nonce, deadline);
     nonce = 2;
     deadline = (await time.latest()) + 10000;
     await sendBet(
@@ -129,6 +136,7 @@ describe("Betting Contract v2", function () {
       gameId,
       voteType,
       stars,
+      fee,
       nonce,
       deadline,
       true,

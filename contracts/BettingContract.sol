@@ -15,12 +15,10 @@ contract BettingContract is Context, AccessControlEnumerable {
     mapping(uint256 => bool) public _nonces;
     mapping(uint256 => mapping(address => BettingData)) public _bets;
     address payable public _treasureWallet;
-    uint256 public _fee;
 
-    constructor(address payable treasureWallet, uint256 fee) {
+    constructor(address payable treasureWallet) {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _treasureWallet = treasureWallet;
-        _fee = fee;
     }
 
     event BetEvent(
@@ -28,6 +26,7 @@ contract BettingContract is Context, AccessControlEnumerable {
         uint256 gameId,
         uint256 voteType,
         uint256 stars,
+        uint256 fee,
         uint256 nonce
     );
 
@@ -35,10 +34,6 @@ contract BettingContract is Context, AccessControlEnumerable {
         address payable treasureWallet
     ) public onlyManager {
         _treasureWallet = treasureWallet;
-    }
-
-    function setFee(uint256 fee) public onlyManager {
-        _fee = fee;
     }
 
     modifier onlyManager() {
@@ -80,6 +75,7 @@ contract BettingContract is Context, AccessControlEnumerable {
                 gameId,
                 voteType,
                 stars,
+                msg.value,
                 nonce,
                 deadline
             )
@@ -89,20 +85,20 @@ contract BettingContract is Context, AccessControlEnumerable {
             hasRole(MANAGER_ROLE, ECDSA.recover(msgHash, signature)),
             "invalid signature"
         );
-        require(msg.value == _fee, "not enough fee");
         _nonces[nonce] = true;
-        _treasureWallet.transfer(_fee);
-        _doBet(gameId, voteType, stars, nonce);
+        _treasureWallet.transfer(msg.value);
+        _doBet(gameId, voteType, stars, msg.value, nonce);
     }
 
     function _doBet(
         uint256 gameId,
         uint256 voteType,
         uint256 stars,
+        uint256 fee,
         uint256 nonce
     ) private {
         _bets[gameId][_msgSender()] = BettingData(true, voteType, stars);
-        emit BetEvent(_msgSender(), gameId, voteType, stars, nonce);
+        emit BetEvent(_msgSender(), gameId, voteType, stars, fee, nonce);
     }
 
     receive() external payable {}

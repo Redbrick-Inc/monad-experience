@@ -5,7 +5,7 @@ module.exports = async ({ ethers, deployments, getNamedAccounts }) => {
   const deployed = await deploy(CONTRACT_NAME, {
     from: deployer,
     log: true,
-    args: [treasure, ethers.parseEther(process.env.FEE)],
+    args: [treasure],
   });
 
   if (deployed.newlyDeployed) {

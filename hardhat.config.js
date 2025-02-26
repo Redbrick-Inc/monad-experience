@@ -22,18 +22,21 @@ module.exports = {
       opBNB_testnet: `privatekey://${process.env.DEPLOY_PRIVATE_KEY}`,
       eth_testnet: `privatekey://${process.env.DEPLOY_PRIVATE_KEY}`,
       monad_testnet: `privatekey://${process.env.DEPLOY_PRIVATE_KEY}`,
+      agld_testnet: `privatekey://${process.env.DEPLOY_PRIVATE_KEY}`,
     },
     manager: {
       default: 1,
       opBNB_testnet: process.env.MANAGER_ADDR,
       eth_testnet: process.env.MANAGER_ADDR,
       monad_testnet: process.env.MANAGER_ADDR,
+      agld_testnet: process.env.MANAGER_ADDR,
     },
     treasure: {
       default: 1,
       opBNB_testnet: process.env.TREASURE_ADDR,
       eth_testnet: process.env.TREASURE_ADDR,
       monad_testnet: process.env.TREASURE_ADDR,
+      agld_testnet: process.env.TREASURE_ADDR,
     },
   },
   networks: {
@@ -49,9 +52,14 @@ module.exports = {
       chainId: 11155111,
     },
     monad_testnet: {
-      url: " https://rpc-testnet.monadinfra.com/rpc/c1Zs1Lk0jt2hK5DI4yqiLvytm6QbmTqP",
+      url: "https://testnet-rpc2.monad.xyz/336fed29348da230015fa18b276499682193db52",
       accounts: [process.env.DEPLOY_PRIVATE_KEY],
       chainId: 10143,
+    },
+    agld_testnet: {
+      url: "https://rpc-devnet.adventurelayer.xyz",
+      accounts: [process.env.DEPLOY_PRIVATE_KEY],
+      chainId: 242070,
     },
   },
   gasReporter: {
