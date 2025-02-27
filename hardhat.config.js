@@ -52,7 +52,7 @@ module.exports = {
       chainId: 11155111,
     },
     monad_testnet: {
-      url: "https://testnet-rpc2.monad.xyz/336fed29348da230015fa18b276499682193db52",
+      url: "https://testnet-rpc.monad.xyz",
       accounts: [process.env.DEPLOY_PRIVATE_KEY],
       chainId: 10143,
     },
