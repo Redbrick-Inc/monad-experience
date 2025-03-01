@@ -9,6 +9,7 @@ module.exports = async ({ ethers, deployments, getNamedAccounts }) => {
     log: true,
     args: ["Brikie", "Brikie"],
   });
+
   const gamepassMarketContract = await deploy(WEEKLY_REWARD, {
     from: deployer,
     log: true,

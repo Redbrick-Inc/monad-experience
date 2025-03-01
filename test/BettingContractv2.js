@@ -4,7 +4,7 @@ const { time } = require("@nomicfoundation/hardhat-network-helpers");
 var _ = require("lodash");
 describe("Betting Contract v2", function () {
   async function setup() {
-    await deployments.fixture();
+    await deployments.fixture(["BettingContract"]);
     const { deployer, manager, treasure } = await ethers.getNamedSigners();
     const bettingContract = await ethers.getContract(
       "BettingContract",
