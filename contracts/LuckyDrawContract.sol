@@ -20,7 +20,13 @@ contract LuckyDrawContract is Context, AccessControlEnumerable {
         _luckyDrawLimitPerAddr = luckyDrawLimitPerUser;
     }
 
-    event LuckyDraw(uint256 gameId, address user, uint256 price, uint256 nonce);
+    event LuckyDraw(
+        uint256 gameId,
+        address user,
+        uint256 stars,
+        uint256 price,
+        uint256 nonce
+    );
     modifier onlyManager() {
         require(
             hasRole(MANAGER_ROLE, _msgSender()),
@@ -51,6 +57,7 @@ contract LuckyDrawContract is Context, AccessControlEnumerable {
 
     function buyLuckyDraw(
         uint256 gameId,
+        uint256 stars,
         uint256 nonce,
         uint256 deadline,
         bytes calldata signature
@@ -61,6 +68,7 @@ contract LuckyDrawContract is Context, AccessControlEnumerable {
                 address(this),
                 _msgSender(),
                 gameId,
+                stars,
                 msg.value,
                 nonce,
                 deadline
@@ -82,7 +90,7 @@ contract LuckyDrawContract is Context, AccessControlEnumerable {
         _gameLuckyDrawPerUser[gameId][_msgSender()] += 1;
         _totalLuckyDraw += 1;
         _treasureWallet.transfer(msg.value);
-        emit LuckyDraw(gameId, _msgSender(), msg.value, nonce);
+        emit LuckyDraw(gameId, _msgSender(), stars, msg.value, nonce);
     }
 
     receive() external payable {}

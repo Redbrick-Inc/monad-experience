@@ -26,7 +26,15 @@ describe("LuckyDraw", function () {
     ({ deployer, manager, luckyDrawContract, treasureWallet } = await setup());
     luckyDrawLimitPerAddr = 1;
   });
-  async function genSign(signer, senderAddr, gameId, price, nonce, deadline) {
+  async function genSign(
+    signer,
+    senderAddr,
+    gameId,
+    stars,
+    price,
+    nonce,
+    deadline
+  ) {
     const msgHash = ethers.getBytes(
       ethers.solidityPackedKeccak256(
         [
@@ -37,12 +45,14 @@ describe("LuckyDraw", function () {
           "uint256",
           "uint256",
           "uint256",
+          "uint256",
         ],
         [
           hre.network.config.chainId,
           luckyDrawContract.target,
           senderAddr,
           gameId,
+          stars,
           price,
           nonce,
           deadline,
@@ -54,6 +64,7 @@ describe("LuckyDraw", function () {
   async function sendBuyLuckyDraw(
     to,
     gameId,
+    stars,
     price,
     nonce,
     deadline,
@@ -64,6 +75,7 @@ describe("LuckyDraw", function () {
       manager,
       to.address,
       gameId,
+      stars,
       price,
       nonce,
       deadline
@@ -73,12 +85,14 @@ describe("LuckyDraw", function () {
     const preLuckyDrawOfDate = await luckyDrawContract._gameLuckyDraw(gameId);
     const tx = luckyDrawContract
       .connect(to)
-      .buyLuckyDraw(gameId, nonce, deadline, signature, { value: price });
+      .buyLuckyDraw(gameId, stars, nonce, deadline, signature, {
+        value: price,
+      });
     if (!isReverted) {
       await tx;
       await expect(tx)
         .to.emit(luckyDrawContract, "LuckyDraw")
-        .withArgs(gameId, to.address, price, nonce);
+        .withArgs(gameId, to.address, stars, price, nonce);
       await expect(tx).changeEtherBalances(
         [treasureWallet, to],
         [price, -price]
@@ -109,6 +123,7 @@ describe("LuckyDraw", function () {
     const deadline = (await time.latest()) + 10000;
     const price = 1;
     const gameId = 1;
-    await sendBuyLuckyDraw(to, gameId, price, nonce, deadline);
+    const stars = 2;
+    await sendBuyLuckyDraw(to, gameId, stars, price, nonce, deadline);
   });
 });
