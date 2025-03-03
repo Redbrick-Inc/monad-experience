@@ -14,16 +14,10 @@ contract EasterEggContract is Context, AccessControlEnumerable {
     address payable public _treasureWallet;
     mapping(uint256 => bool) _claimHist;
 
-    address public _brikieNFTAddr;
     address public _molandakNFTAddr;
 
-    constructor(
-        address nftAddr,
-        address molandakNFTAddr,
-        address payable treasureWallet
-    ) {
+    constructor(address molandakNFTAddr, address payable treasureWallet) {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _brikieNFTAddr = nftAddr;
         _molandakNFTAddr = molandakNFTAddr;
         _treasureWallet = treasureWallet;
     }
@@ -63,7 +57,7 @@ contract EasterEggContract is Context, AccessControlEnumerable {
 
     function claimEgg(
         uint256 eggId,
-        uint256[] calldata values, //stars - brikieTokenId - molandakTokenId
+        uint256[] calldata values, //stars  - molandakTokenId
         uint256 nonce,
         uint256 deadline,
         bytes calldata signature
@@ -94,12 +88,8 @@ contract EasterEggContract is Context, AccessControlEnumerable {
         _nonces[nonce] = true;
         _claimHist[eggId] = true;
         if (values[1] > 0) {
-            BrikieNFT nft = BrikieNFT(_brikieNFTAddr);
-            nft.mint(_msgSender(), values[1]);
-        }
-        if (values[2] > 0) {
             MolandakNFT nft = MolandakNFT(_molandakNFTAddr);
-            nft.mint(_msgSender(), values[2]);
+            nft.mint(_msgSender(), values[1]);
         }
         _treasureWallet.transfer(msg.value);
         emit ClaimedEgg(_msgSender(), eggId, values, nonce);

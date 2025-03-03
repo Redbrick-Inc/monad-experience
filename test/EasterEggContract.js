@@ -31,7 +31,6 @@ describe("Easter egg claim", function () {
     senderAddr,
     eggId,
     stars,
-    brickieTokenId,
     monlandakTokenId,
     price,
     nonce,
@@ -54,7 +53,7 @@ describe("Easter egg claim", function () {
           easterEggcontract.target,
           senderAddr,
           eggId,
-          [stars, brickieTokenId, monlandakTokenId],
+          [stars, monlandakTokenId],
           price,
           nonce,
           deadline,
@@ -68,7 +67,6 @@ describe("Easter egg claim", function () {
     to,
     eggId,
     stars,
-    brikieTokenId,
     monlandakTokenId,
     price,
     nonce,
@@ -81,7 +79,6 @@ describe("Easter egg claim", function () {
       to.address,
       eggId,
       stars,
-      brikieTokenId,
       monlandakTokenId,
       price,
       nonce,
@@ -89,25 +86,15 @@ describe("Easter egg claim", function () {
     );
     const tx = easterEggcontract
       .connect(to)
-      .claimEgg(
-        eggId,
-        [stars, brikieTokenId, monlandakTokenId],
-        nonce,
-        deadline,
-        signature,
-        { value: price }
-      );
+      .claimEgg(eggId, [stars, monlandakTokenId], nonce, deadline, signature, {
+        value: price,
+      });
     await expect(tx).changeEtherBalances([treasureWallet, to], [price, -price]);
     if (!isReverted) {
       await tx;
       await expect(tx)
         .to.emit(easterEggcontract, "ClaimedEgg")
-        .withArgs(
-          to.address,
-          eggId,
-          [stars, brikieTokenId, monlandakTokenId],
-          nonce
-        );
+        .withArgs(to.address, eggId, [stars, monlandakTokenId], nonce);
     } else {
       if (revertMsg) {
         await expect(tx).to.revertedWith(revertMsg);
@@ -124,17 +111,7 @@ describe("Easter egg claim", function () {
     const price = 1;
     const eggId = 1;
     const stars = 3;
-    const brikieTokenId = 1;
     const monlandakTokenId = 1;
-    await claim(
-      to,
-      eggId,
-      stars,
-      brikieTokenId,
-      monlandakTokenId,
-      price,
-      nonce,
-      deadline
-    );
+    await claim(to, eggId, stars, monlandakTokenId, price, nonce, deadline);
   });
 });
