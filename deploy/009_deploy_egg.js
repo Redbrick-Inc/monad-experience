@@ -1,5 +1,5 @@
 const EASTER_EGG_REWARD = "EasterEggContract";
-const MONLANDAK_NFT = "MolandakNFT";
+const MONLANDAK_NFT = "BrikieMolandakNFT";
 
 module.exports = async ({ ethers, deployments, getNamedAccounts }) => {
   const { deployer, manager, treasure } = await getNamedAccounts();
@@ -7,7 +7,7 @@ module.exports = async ({ ethers, deployments, getNamedAccounts }) => {
   const monlandakDeployed = await deploy(MONLANDAK_NFT, {
     from: deployer,
     log: true,
-    args: ["Monlandak", "Monlandak"],
+    args: ["Brikie&Molandak", "BrikieMolandakNFT"],
   });
 
   //Deploy easter egg
