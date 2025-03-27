@@ -1,4 +1,4 @@
-const NEW_PLAY_EARN_CONTRACT = "NewPlayEarnReward";
+const NEW_PLAY_EARN_CONTRACT = "StepByStepContract";
 
 module.exports = async ({ ethers, deployments, getNamedAccounts }) => {
   const { deployer, manager, treasure } = await getNamedAccounts();

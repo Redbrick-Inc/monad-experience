@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 
-contract NewPlayEarnReward is Context, AccessControlEnumerable {
+contract StepByStepContract is Context, AccessControlEnumerable {
     bytes32 public constant MANAGER_ROLE = keccak256("MANAGER_ROLE");
     mapping(uint256 => bool) public _nonces;
     address payable public _treasureWallet;

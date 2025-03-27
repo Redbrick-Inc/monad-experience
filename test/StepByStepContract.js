@@ -2,12 +2,12 @@ const { expect } = require("chai");
 const { ethers } = require("hardhat");
 const { time } = require("@nomicfoundation/hardhat-network-helpers");
 var _ = require("lodash");
-describe("DailyRewardContract", function () {
+describe("StepByStepContract", function () {
   async function setup() {
-    await deployments.fixture(["NewPlayEarnReward"]);
+    await deployments.fixture(["StepByStepContract"]);
     const { deployer, manager, treasure } = await ethers.getNamedSigners();
     const gamepassMarket = await ethers.getContract(
-      "NewPlayEarnReward",
+      "StepByStepContract",
       deployer
     );
 
