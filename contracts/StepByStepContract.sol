@@ -19,7 +19,7 @@ contract StepByStepContract is Context, AccessControlEnumerable {
 
     event Claimed(
         address user,
-        uint256 weekId,
+        uint256 claimId,
         uint256[] values,
         uint256 nonce
     );
