@@ -4,7 +4,7 @@ require("@openzeppelin/hardhat-upgrades");
 require("hardhat-deploy");
 require("hardhat-deploy-ethers");
 require("@nomicfoundation/hardhat-chai-matchers");
-require("dotenv").config({ path: "./.env.local" });
+require("dotenv").config({ path: "./.env.prod" });
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
@@ -23,6 +23,7 @@ module.exports = {
       eth_testnet: `privatekey://${process.env.DEPLOY_PRIVATE_KEY}`,
       monad_testnet: `privatekey://${process.env.DEPLOY_PRIVATE_KEY}`,
       agld_testnet: `privatekey://${process.env.DEPLOY_PRIVATE_KEY}`,
+      opBNB_mainnet: `privatekey://${process.env.DEPLOY_PRIVATE_KEY}`,
     },
     manager: {
       default: 1,
@@ -30,6 +31,7 @@ module.exports = {
       eth_testnet: process.env.MANAGER_ADDR,
       monad_testnet: process.env.MANAGER_ADDR,
       agld_testnet: process.env.MANAGER_ADDR,
+      opBNB_mainnet: process.env.MANAGER_ADDR,
     },
     treasure: {
       default: 1,
@@ -37,6 +39,7 @@ module.exports = {
       eth_testnet: process.env.TREASURE_ADDR,
       monad_testnet: process.env.TREASURE_ADDR,
       agld_testnet: process.env.TREASURE_ADDR,
+      opBNB_mainnet: process.env.TREASURE_ADDR,
     },
   },
   networks: {
@@ -60,6 +63,11 @@ module.exports = {
       url: "https://rpc-devnet.adventurelayer.xyz",
       accounts: [process.env.DEPLOY_PRIVATE_KEY],
       chainId: 242070,
+    },
+    opBNB_mainnet: {
+      url: "https://opbnb-mainnet-rpc.bnbchain.org",
+      accounts: [process.env.DEPLOY_PRIVATE_KEY],
+      chainId: 204,
     },
   },
   gasReporter: {
