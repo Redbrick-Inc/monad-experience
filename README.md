@@ -1,4 +1,9 @@
 # Monad Experience Event
+
+### Install requirement
+```
+npm install
+```
 ### Run tests
 
 ```
