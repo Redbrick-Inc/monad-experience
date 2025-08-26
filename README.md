@@ -19,7 +19,7 @@ npx hardhat deploy --network <network> --reset --tags <contract tags>
 ### Verify contracts
 
 ```
-hardhat --network <network> etherscan-verify [--api-key <etherscan-apikey>] [--api-url <url>]
+npx hardhat --network <network> etherscan-verify [--api-key <etherscan-apikey>] [--api-url <url>]
 ```
 
 ### File .env
